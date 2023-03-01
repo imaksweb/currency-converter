@@ -1,0 +1,15 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.page {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  color: $c-black;
+
+  &__body {
+    background-color: $c-bg-body;
+  }
+}
