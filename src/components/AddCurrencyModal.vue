@@ -5,6 +5,7 @@ import type { Rate } from '../types/Rate';
 
 interface ComponentData {
   newValue: string;
+  isError: boolean;
 }
 
 export default defineComponent({
@@ -12,17 +13,33 @@ export default defineComponent({
     rates: {
       type: Array as PropType<Rate[]>,
       required: true
-    },
-    isError: {
-      type: Boolean,
-      required: true
     }
   },
   emits: ['add', 'close'],
   data(): ComponentData {
     return {
-      newValue: ''
+      newValue: '',
+      isError: false
     };
+  },
+  methods: {
+    handleAddCurrency(event: Event) {
+      const formData = new FormData(event.target as HTMLFormElement);
+
+      const value = formData.get('add-currency');
+
+      if (!value) {
+        this.isError = true;
+
+        setTimeout(() => {
+          this.isError = false;
+        }, 2000);
+
+        return;
+      }
+
+      this.$emit('add', value);
+    }
   }
 });
 </script>
@@ -36,7 +53,7 @@ export default defineComponent({
 
       <div class="modal__body">
         <slot name="body">
-          <form class="modal__form" @submit.prevent="$emit('add', $event)">
+          <form class="modal__form" @submit.prevent="handleAddCurrency">
             <select class="modal__select" name="add-currency" v-model="newValue">
               <option v-for="rate of rates" :key="rate.id" :value="rate.type">
                 {{ rate.type }}

@@ -5,6 +5,7 @@ import currencyList from '../data/currencyList';
 import { getRatesApi } from '../api/getRates';
 
 import LoaderComponent from './LoaderComponent.vue';
+import NotFound from './NotFound.vue';
 
 interface ComponentData {
   targetCurrency: string;
@@ -12,11 +13,13 @@ interface ComponentData {
   baseCurrency: string;
   rates: { [key: string]: number };
   isLoading: boolean;
+  isError: boolean;
 }
 
 export default defineComponent({
   components: {
-    LoaderComponent
+    LoaderComponent,
+    NotFound
   },
   data(): ComponentData {
     return {
@@ -24,7 +27,8 @@ export default defineComponent({
       baseAmount: 1,
       baseCurrency: 'USD',
       rates: {},
-      isLoading: false
+      isLoading: false,
+      isError: false
     };
   },
   computed: {
@@ -59,13 +63,15 @@ export default defineComponent({
   methods: {
     async requestRates(base: string) {
       this.isLoading = true;
+      this.isError = false;
 
       try {
         const data = await getRatesApi(base);
 
         this.rates = await data.rates;
-      } catch (err) {
-        console.log(err);
+      } catch (err: any) {
+        this.isError = true;
+        throw new Error(err);
       } finally {
         this.isLoading = false;
       }
@@ -83,7 +89,9 @@ export default defineComponent({
 <template>
   <div class="converter">
     <h2 class="converter__title">Converter</h2>
-    <div class="converter__wrapper" v-if="!isLoading">
+    <LoaderComponent v-if="isLoading" />
+    <NotFound @refresh="requestRates(baseCurrency)" v-else-if="isError" />
+    <div class="converter__wrapper" v-else>
       <div class="converter__item">
         <select
           name="convert-from"
@@ -108,7 +116,6 @@ export default defineComponent({
         <input class="converter__input" type="number" v-model="targetAmount" />
       </div>
     </div>
-    <LoaderComponent v-else />
   </div>
 </template>
 

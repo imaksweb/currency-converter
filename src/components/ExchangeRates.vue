@@ -7,6 +7,7 @@ import { getRatesApi } from '../api/getRates';
 import RatesList from './RatesList.vue';
 import AddCurrencyModal from './AddCurrencyModal.vue';
 import LoaderComponent from './LoaderComponent.vue';
+import NotFound from './NotFound.vue';
 
 interface ComponentData {
   rates: { [key: string]: number };
@@ -24,7 +25,8 @@ export default defineComponent({
   components: {
     RatesList,
     AddCurrencyModal,
-    LoaderComponent
+    LoaderComponent,
+    NotFound
   },
   data(): ComponentData {
     const defaultSymbols: Symbol[] = ['USD', 'EUR', 'UAH', 'BTC'];
@@ -82,13 +84,15 @@ export default defineComponent({
   methods: {
     async getRates(base: string) {
       this.isLoading = true;
+      this.isError = false;
 
       try {
         const data = await getRatesApi(base);
 
         this.rates = await data.rates;
-      } catch (err) {
-        console.log(err);
+      } catch (err: any) {
+        this.isError = true;
+        throw new Error(err);
       } finally {
         this.isLoading = false;
       }
@@ -98,24 +102,9 @@ export default defineComponent({
     },
     closeModal() {
       this.showModal = false;
-      this.isError = false;
     },
-    handleSubmit(event: Event) {
-      const formData = new FormData(event.target as HTMLFormElement);
-
-      const value = formData.get('add-currency');
-
-      if (!value) {
-        this.isError = true;
-
-        setTimeout(() => {
-          this.isError = false;
-        }, 2000);
-
-        return;
-      }
-
-      this.symbols.push(value as string);
+    handleSubmit(value: string) {
+      this.symbols.push(value);
       this.closeModal();
     },
     handleRefresh() {
@@ -138,6 +127,9 @@ export default defineComponent({
   <div class="exchange-rates">
     <h2 class="exchange-rates__title">Exchange Rates</h2>
     <LoaderComponent v-if="isLoading" />
+
+    <NotFound v-else-if="isError" @refresh="handleRefresh" />
+
     <div class="exchange-rates__wrapper" v-else>
       <select
         class="exchange-rates__select"
@@ -172,7 +164,6 @@ export default defineComponent({
       @add="handleSubmit"
       @close="closeModal"
       :rates="normalizedRates"
-      :isError="isError"
       v-if="showModal"
     />
   </transition>
