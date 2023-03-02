@@ -3,7 +3,7 @@ import type { ExchangeRatesApiResponse } from '../types/ExchangeRatesApiResponse
 export const getRatesApi = async (baseCurrency: string): Promise<ExchangeRatesApiResponse> => {
   const myHeaders: HeadersInit = new Headers();
 
-  myHeaders.append('apikey', 'W7yW1tnaeHw7SmLAcV6bNSMAusE4QPCa');
+  myHeaders.append('apikey', 'YOUR API_KEY');
 
   const requestOptions: RequestInit = {
     method: 'GET',

@@ -1,9 +1,11 @@
 <script>
 import CurrencyConverter from './components/CurrencyConverter.vue';
+import ExchangeRates from './components/ExchangeRates.vue';
 
 export default {
   components: {
-    CurrencyConverter
+    CurrencyConverter,
+    ExchangeRates
   }
 };
 </script>
@@ -14,6 +16,10 @@ export default {
       <div class="currencies-app__wrapper">
         <h1 class="currencies-app__title">Currencies App</h1>
         <CurrencyConverter />
+
+        <hr />
+
+        <ExchangeRates />
       </div>
     </div>
   </div>
