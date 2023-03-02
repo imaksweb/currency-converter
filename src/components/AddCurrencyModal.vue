@@ -3,12 +3,17 @@ import { defineComponent } from 'vue';
 import type { PropType } from 'vue';
 import type { Rate } from '../types/Rate';
 
+import ButtonComponent from './ButtonComponent.vue';
+
 interface ComponentData {
   newValue: string;
   isError: boolean;
 }
 
 export default defineComponent({
+  components: {
+    ButtonComponent
+  },
   props: {
     rates: {
       type: Array as PropType<Rate[]>,
@@ -59,14 +64,7 @@ export default defineComponent({
                 {{ rate.type }}
               </option>
             </select>
-            <button
-              :disabled="isError"
-              type="submit"
-              class="modal__btn modal__btn--green"
-              :class="{ 'modal__btn--disabled': isError }"
-            >
-              Add
-            </button>
+            <ButtonComponent :type="'submit'" color="secondary">Add</ButtonComponent>
           </form>
           <p class="modal__error" v-if="isError">Invalid currency</p>
         </slot>
@@ -74,7 +72,7 @@ export default defineComponent({
 
       <div class="modal__footer">
         <slot name="footer">
-          <button class="modal__btn modal__btn--blue" @click="$emit('close')">Cancel</button>
+          <ButtonComponent :onClick="($event) => $emit('close', $event)">Cancel</ButtonComponent>
         </slot>
       </div>
     </div>
@@ -151,46 +149,6 @@ export default defineComponent({
     border-radius: 6px;
 
     outline: none;
-  }
-
-  &__btn {
-    display: inline-block;
-    padding: 6px 18px;
-
-    font-size: 16px;
-    font-weight: 700;
-    text-transform: uppercase;
-    color: #ffffff;
-
-    border: none;
-    border-radius: 6px;
-
-    transition: background-color 0.3s ease;
-    cursor: pointer;
-
-    &--blue {
-      background-color: #0070c9;
-
-      &:hover {
-        background-color: #51a9ee;
-      }
-    }
-
-    &--green {
-      background-color: #1cac78;
-
-      &:hover {
-        background-color: #8fbc8b;
-      }
-    }
-
-    &--disabled {
-      background-color: #ececec;
-
-      &:hover {
-        background-color: #ececec;
-      }
-    }
   }
 
   &__error {

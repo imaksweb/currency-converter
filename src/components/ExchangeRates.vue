@@ -8,6 +8,7 @@ import RatesList from './RatesList.vue';
 import AddCurrencyModal from './AddCurrencyModal.vue';
 import LoaderComponent from './LoaderComponent.vue';
 import NotFound from './NotFound.vue';
+import ButtonComponent from './ButtonComponent.vue';
 
 interface ComponentData {
   rates: { [key: string]: number };
@@ -26,7 +27,8 @@ export default defineComponent({
     RatesList,
     AddCurrencyModal,
     LoaderComponent,
-    NotFound
+    NotFound,
+    ButtonComponent
   },
   data(): ComponentData {
     const defaultSymbols: Symbol[] = ['USD', 'EUR', 'UAH', 'BTC'];
@@ -145,17 +147,11 @@ export default defineComponent({
       <RatesList :rates="filteredRates" />
 
       <div class="exchange-rates__controls">
-        <button class="exchange-rates__btn exchange-rates__btn--green" @click="openModal">
-          Add
-        </button>
-        <button
-          class="exchange-rates__btn exchange-rates__btn--blue"
-          :class="{ 'exchange-rates__btn--disabled': !isRefreshActive }"
-          :disabled="!isRefreshActive"
-          @click="handleRefresh"
+        <ButtonComponent color="secondary" :onClick="openModal">Add</ButtonComponent>
+
+        <ButtonComponent :disabled="!isRefreshActive" :onClick="handleRefresh"
+          >Refresh</ButtonComponent
         >
-          Refresh
-        </button>
       </div>
     </div>
   </div>
@@ -207,46 +203,6 @@ export default defineComponent({
   &__controls {
     display: flex;
     gap: 20px;
-  }
-
-  &__btn {
-    display: block;
-    padding: 10px 18px;
-
-    font-size: 16px;
-    font-weight: 700;
-    text-transform: uppercase;
-    color: #ffffff;
-
-    border: none;
-    border-radius: 6px;
-
-    transition: background-color 0.3s ease;
-    cursor: pointer;
-
-    &--blue {
-      background-color: #0070c9;
-
-      &:hover {
-        background-color: #51a9ee;
-      }
-    }
-
-    &--green {
-      background-color: #1cac78;
-
-      &:hover {
-        background-color: #8fbc8b;
-      }
-    }
-
-    &--disabled {
-      background-color: #ececec;
-
-      &:hover {
-        background-color: #ececec;
-      }
-    }
   }
 }
 </style>
