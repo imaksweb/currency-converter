@@ -15,7 +15,7 @@ interface ComponentData {
   base: string;
   showModal: boolean;
   isError: boolean;
-  isActive: boolean;
+  isRefreshActive: boolean;
   isLoading: boolean;
 }
 
@@ -51,7 +51,7 @@ export default defineComponent({
       base: 'USD',
       showModal: false,
       isError: false,
-      isActive: true,
+      isRefreshActive: true,
       isLoading: false
     };
   },
@@ -108,10 +108,10 @@ export default defineComponent({
       this.closeModal();
     },
     handleRefresh() {
-      this.isActive = false;
+      this.isRefreshActive = false;
 
       setTimeout(() => {
-        this.isActive = true;
+        this.isRefreshActive = true;
       }, 5000);
 
       this.getRates(this.base);
@@ -150,8 +150,8 @@ export default defineComponent({
         </button>
         <button
           class="exchange-rates__btn exchange-rates__btn--blue"
-          :class="{ 'exchange-rates__btn--disabled': !isActive }"
-          :disabled="!isActive"
+          :class="{ 'exchange-rates__btn--disabled': !isRefreshActive }"
+          :disabled="!isRefreshActive"
           @click="handleRefresh"
         >
           Refresh
