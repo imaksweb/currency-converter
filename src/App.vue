@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import CurrencyConverter from './components/CurrencyConverter.vue';
 import ExchangeRates from './components/ExchangeRates.vue';
 

@@ -6,7 +6,6 @@ import type { Rate } from '../types/Rate';
 import ButtonComponent from './ButtonComponent.vue';
 
 interface ComponentData {
-  newValue: string;
   isError: boolean;
 }
 
@@ -23,7 +22,6 @@ export default defineComponent({
   emits: ['add', 'close'],
   data(): ComponentData {
     return {
-      newValue: '',
       isError: false
     };
   },
@@ -59,7 +57,7 @@ export default defineComponent({
       <div class="modal__body">
         <slot name="body">
           <form class="modal__form" @submit.prevent="handleAddCurrency">
-            <select class="modal__select" name="add-currency" v-model="newValue">
+            <select class="modal__select" name="add-currency">
               <option v-for="rate of rates" :key="rate.id" :value="rate.type">
                 {{ rate.type }}
               </option>
