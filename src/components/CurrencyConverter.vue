@@ -3,6 +3,7 @@ import { defineComponent } from 'vue';
 import { v4 as uuidv4 } from 'uuid';
 import currencyList from '../data/currencyList';
 import { getRatesApi } from '../api/getRates';
+import type { Rate } from '../types/Rate';
 
 import LoaderComponent from './LoaderComponent.vue';
 import NotFound from './NotFound.vue';
@@ -53,8 +54,8 @@ export default defineComponent({
         this.baseAmount = value / this.rates[this.targetCurrency];
       }
     },
-    normalizedList() {
-      return currencyList.map((currency) => ({
+    normalizedList(): Rate[] {
+      return currencyList.map((currency: string) => ({
         id: uuidv4(),
         type: currency
       }));
